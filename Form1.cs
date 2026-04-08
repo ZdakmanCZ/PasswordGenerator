@@ -29,17 +29,17 @@ namespace PasswordGenerator
             };
             this.Controls.Add(lblLength);
 
-            // Label pro zobrazení aktuální hodnoty z TrackBar
-            Label lblLengthValue = new Label
+            // TextBox pro zadání / zobrazení délky hesla (nahrazuje Label)
+            TextBox txtLength = new TextBox
             {
-                Name = "lblLengthValue",
+                Name = "txtLength",
                 Text = "12",
                 Location = new Point(380, 20),
                 Size = new Size(40, 25),
                 Font = new Font("Arial", 10, FontStyle.Bold),
-                TextAlign = ContentAlignment.MiddleRight
+                TextAlign = HorizontalAlignment.Right
             };
-            this.Controls.Add(lblLengthValue);
+            this.Controls.Add(txtLength);
 
             // TrackBar pro délku hesla
             TrackBar trackBarLength = new TrackBar
@@ -50,10 +50,60 @@ namespace PasswordGenerator
                 Minimum = 4,
                 Maximum = 128,
                 Value = 12,
-                TickStyle = TickStyle.BottomRight,
-                TickFrequency = 10
+                TickStyle = TickStyle.None,
+                //TickFrequency = 10
             };
-            trackBarLength.ValueChanged += (sender, e) => lblLengthValue.Text = trackBarLength.Value.ToString();
+
+            // Synchronizace: slider -> textbox
+            trackBarLength.ValueChanged += (sender, e) =>
+            {
+                txtLength.Text = trackBarLength.Value.ToString();
+            };
+
+            // Ošetøení vstupu v textboxu:
+            // - povolit pouze èíslice a ovládací znaky pøi psaní
+            // - pøi stisku Enter nebo opuštìní pole validovat a nastavit trackbar
+            txtLength.KeyPress += (sender, e) =>
+            {
+                if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                {
+                    e.Handled = true;
+                }
+            };
+
+            txtLength.KeyDown += (sender, e) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    if (int.TryParse(txtLength.Text, out int value))
+                    {
+                        value = Math.Clamp(value, trackBarLength.Minimum, trackBarLength.Maximum);
+                        trackBarLength.Value = value;
+                        txtLength.Text = value.ToString();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Zadejte prosím èíslo mezi {trackBarLength.Minimum} a {trackBarLength.Maximum}.", "Neplatná hodnota", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        txtLength.Text = trackBarLength.Value.ToString();
+                    }
+                }
+            };
+
+            txtLength.Leave += (sender, e) =>
+            {
+                if (int.TryParse(txtLength.Text, out int value))
+                {
+                    value = Math.Clamp(value, trackBarLength.Minimum, trackBarLength.Maximum);
+                    trackBarLength.Value = value;
+                    txtLength.Text = value.ToString();
+                }
+                else
+                {
+                    txtLength.Text = trackBarLength.Value.ToString();
+                }
+            };
+
             this.Controls.Add(trackBarLength);
 
             // Popisek pro vlastní text
@@ -192,6 +242,18 @@ namespace PasswordGenerator
             };
             btnClear.Click += (sender, e) => BtnClear_Click(sender, e, txtPassword, txtCustomText);
             this.Controls.Add(btnClear);
+
+            // --- Zajistíme, že po spuštìní nebude txtLength mít fokus ---
+            // Asynchronnì zrušíme ActiveControl a vymažeme výbìr v txtLength
+            this.Shown += (s, e) =>
+            {
+                this.BeginInvoke(new Action(() =>
+                {
+                    this.ActiveControl = null;
+                    txtLength.SelectionStart = txtLength.Text.Length;
+                    txtLength.SelectionLength = 0;
+                }));
+            };
         }
 
         private void BtnGenerate_Click(object sender, EventArgs e, TrackBar trackBarLength, 
