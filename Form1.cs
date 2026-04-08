@@ -25,7 +25,7 @@ namespace PasswordGenerator
                 Text = "Délka hesla:",
                 Location = new Point(20, 20),
                 Size = new Size(150, 25),
-                Font = new Font("Rubik", 10, FontStyle.Regular)
+                Font = new Font("Rubik", 10, FontStyle.Bold)
             };
             this.Controls.Add(paswordLength);
 
@@ -206,7 +206,7 @@ namespace PasswordGenerator
                 Location = new Point(20, 320),
                 Size = new Size(200, 40),
                 Font = new Font("Rubik", 11, FontStyle.Bold),
-                BackColor = Color.LimeGreen,
+                BackColor = Color.MediumSeaGreen,
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand
             };
