@@ -20,26 +20,26 @@ namespace PasswordGenerator
             this.BackColor = Color.WhiteSmoke;
 
             // Popisek délky hesla
-            Label lblLength = new Label
+            Label paswordLength = new Label
             {
                 Text = "Délka hesla:",
                 Location = new Point(20, 20),
                 Size = new Size(150, 25),
-                Font = new Font("Arial", 10, FontStyle.Regular)
+                Font = new Font("Rubik", 10, FontStyle.Regular)
             };
-            this.Controls.Add(lblLength);
+            this.Controls.Add(paswordLength);
 
-            // TextBox pro zadání / zobrazení délky hesla (nahrazuje Label)
-            TextBox txtLength = new TextBox
+            // TextBox pro zadání / zobrazení délky hesla
+            TextBox textLength = new TextBox
             {
-                Name = "txtLength",
+                Name = "textLength",
                 Text = "12",
                 Location = new Point(380, 20),
                 Size = new Size(40, 25),
-                Font = new Font("Arial", 10, FontStyle.Bold),
-                TextAlign = HorizontalAlignment.Right
+                Font = new Font("Rubik", 10, FontStyle.Regular),
+                TextAlign = HorizontalAlignment.Center
             };
-            this.Controls.Add(txtLength);
+            this.Controls.Add(textLength);
 
             // TrackBar pro délku hesla
             TrackBar trackBarLength = new TrackBar
@@ -51,19 +51,19 @@ namespace PasswordGenerator
                 Maximum = 128,
                 Value = 12,
                 TickStyle = TickStyle.None,
-                //TickFrequency = 10
+                //TickFrequency = 10   - èárky pod trackaberm jsou vypnuté
             };
 
             // Synchronizace: slider -> textbox
             trackBarLength.ValueChanged += (sender, e) =>
             {
-                txtLength.Text = trackBarLength.Value.ToString();
+                textLength.Text = trackBarLength.Value.ToString();
             };
 
             // Ošetøení vstupu v textboxu:
             // - povolit pouze èíslice a ovládací znaky pøi psaní
             // - pøi stisku Enter nebo opuštìní pole validovat a nastavit trackbar
-            txtLength.KeyPress += (sender, e) =>
+            textLength.KeyPress += (sender, e) =>
             {
                 if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
                 {
@@ -71,132 +71,132 @@ namespace PasswordGenerator
                 }
             };
 
-            txtLength.KeyDown += (sender, e) =>
+            textLength.KeyDown += (sender, e) =>
             {
                 if (e.KeyCode == Keys.Enter)
                 {
                     e.SuppressKeyPress = true;
-                    if (int.TryParse(txtLength.Text, out int value))
+                    if (int.TryParse(textLength.Text, out int value))
                     {
                         value = Math.Clamp(value, trackBarLength.Minimum, trackBarLength.Maximum);
                         trackBarLength.Value = value;
-                        txtLength.Text = value.ToString();
+                        textLength.Text = value.ToString();
                     }
                     else
                     {
                         MessageBox.Show($"Zadejte prosím èíslo mezi {trackBarLength.Minimum} a {trackBarLength.Maximum}.", "Neplatná hodnota", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        txtLength.Text = trackBarLength.Value.ToString();
+                        textLength.Text = trackBarLength.Value.ToString();
                     }
                 }
             };
 
-            txtLength.Leave += (sender, e) =>
+            textLength.Leave += (sender, e) =>
             {
-                if (int.TryParse(txtLength.Text, out int value))
+                if (int.TryParse(textLength.Text, out int value))
                 {
                     value = Math.Clamp(value, trackBarLength.Minimum, trackBarLength.Maximum);
                     trackBarLength.Value = value;
-                    txtLength.Text = value.ToString();
+                    textLength.Text = value.ToString();
                 }
                 else
                 {
-                    txtLength.Text = trackBarLength.Value.ToString();
+                    textLength.Text = trackBarLength.Value.ToString();
                 }
             };
 
             this.Controls.Add(trackBarLength);
 
             // Popisek pro vlastní text
-            Label lblCustomText = new Label
+            Label labelCustomText = new Label
             {
                 Text = "Vlastní text (volitelnì):",
                 Location = new Point(20, 60),
                 Size = new Size(200, 25),
-                Font = new Font("Arial", 10, FontStyle.Regular)
+                Font = new Font("Rubik", 10, FontStyle.Regular)
             };
-            this.Controls.Add(lblCustomText);
+            this.Controls.Add(labelCustomText);
 
             // Textbox pro zadání vlastního textu
-            TextBox txtCustomText = new TextBox
+            TextBox textCustomText = new TextBox
             {
-                Name = "txtCustomText",
+                Name = "textCustomText",
                 Location = new Point(20, 85),
                 Size = new Size(450, 25),
-                Font = new Font("Arial", 10)
+                Font = new Font("Rubik", 10)
             };
-            this.Controls.Add(txtCustomText);
+            this.Controls.Add(textCustomText);
 
             // Checkbox pro zamíchání vlastního textu
-            CheckBox chkShuffleText = new CheckBox
+            CheckBox checkBoxShuffleText = new CheckBox
             {
-                Name = "chkShuffleText",
+                Name = "checkBoxShuffleText",
                 Text = "Zamíchat vlastní text",
                 Location = new Point(20, 115),
                 Size = new Size(200, 25),
                 Checked = true,
-                Font = new Font("Arial", 10)
+                Font = new Font("Rubik", 10)
             };
-            this.Controls.Add(chkShuffleText);
+            this.Controls.Add(checkBoxShuffleText);
 
             // Checkbox pro malá písmena
-            CheckBox chkLowercase = new CheckBox
+            CheckBox checkBoxLowercase = new CheckBox
             {
-                Name = "chkLowercase",
+                Name = "checkBoxLowercase",
                 Text = "Malá písmena (a-z)",
                 Location = new Point(20, 160),
                 Size = new Size(200, 25),
                 Checked = true,
-                Font = new Font("Arial", 10)
+                Font = new Font("Rubik", 10)
             };
-            this.Controls.Add(chkLowercase);
+            this.Controls.Add(checkBoxLowercase);
 
             // Checkbox pro velká písmena
-            CheckBox chkUppercase = new CheckBox
+            CheckBox checkBoxUppercase = new CheckBox
             {
-                Name = "chkUppercase",
+                Name = "checkBoxUppercase",
                 Text = "Velká písmena (A-Z)",
                 Location = new Point(260, 160),
                 Size = new Size(200, 25),
                 Checked = true,
-                Font = new Font("Arial", 10)
+                Font = new Font("Rubik", 10)
             };
-            this.Controls.Add(chkUppercase);
+            this.Controls.Add(checkBoxUppercase);
 
             // Checkbox pro èísla
-            CheckBox chkDigits = new CheckBox
+            CheckBox checkBoxDigits = new CheckBox
             {
-                Name = "chkDigits",
+                Name = "checkBoxDigits",
                 Text = "Èísla (0-9)",
                 Location = new Point(20, 200),
                 Size = new Size(200, 25),
                 Checked = true,
-                Font = new Font("Arial", 10)
+                Font = new Font("Rubik", 10)
             };
-            this.Controls.Add(chkDigits);
+            this.Controls.Add(checkBoxDigits);
 
             // Checkbox pro speciální znaky
-            CheckBox chkSpecial = new CheckBox
+            CheckBox checkBoxSpecialSymbols = new CheckBox
             {
-                Name = "chkSpecial",
+                Name = "checkBoxSpecialSymbols",
                 Text = "Speciální znaky (!@#$...)",
                 Location = new Point(260, 200),
                 Size = new Size(200, 25),
                 Checked = false,
-                Font = new Font("Arial", 10)
+                Font = new Font("Rubik", 10)
             };
-            this.Controls.Add(chkSpecial);
+            this.Controls.Add(checkBoxSpecialSymbols);
 
             // Textbox pro zobrazení hesla
-            TextBox txtPassword = new TextBox
+            TextBox textPassword = new TextBox
             {
-                Name = "txtPassword",
+                Name = "textPassword",
                 Location = new Point(20, 260),
                 Size = new Size(450, 40),
                 ReadOnly = true,
                 Font = new Font("Courier New", 12),
                 Multiline = true
             };
-            this.Controls.Add(txtPassword);
+            this.Controls.Add(textPassword);
 
             // Tlaèítko Generovat
             Button btnGenerate = new Button
@@ -205,12 +205,12 @@ namespace PasswordGenerator
                 Text = "Generovat heslo",
                 Location = new Point(20, 320),
                 Size = new Size(200, 40),
-                Font = new Font("Arial", 11, FontStyle.Bold),
+                Font = new Font("Rubik", 11, FontStyle.Bold),
                 BackColor = Color.LimeGreen,
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand
             };
-            btnGenerate.Click += (sender, e) => BtnGenerate_Click(sender, e, trackBarLength, chkLowercase, chkUppercase, chkDigits, chkSpecial, txtPassword, txtCustomText, chkShuffleText);
+            btnGenerate.Click += (sender, e) => BtnGenerate_Click(sender, e, trackBarLength, checkBoxLowercase, checkBoxUppercase, checkBoxDigits, checkBoxSpecialSymbols, textPassword, textCustomText, checkBoxShuffleText);
             this.Controls.Add(btnGenerate);
 
             // Tlaèítko Kopírovat
@@ -220,12 +220,12 @@ namespace PasswordGenerator
                 Text = "Kopírovat",
                 Location = new Point(240, 320),
                 Size = new Size(230, 40),
-                Font = new Font("Arial", 11, FontStyle.Bold),
+                Font = new Font("Rubik", 11, FontStyle.Bold),
                 BackColor = Color.DeepSkyBlue,
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand
             };
-            btnCopy.Click += (sender, e) => BtnCopy_Click(sender, e, txtPassword);
+            btnCopy.Click += (sender, e) => BtnCopy_Click(sender, e, textPassword);
             this.Controls.Add(btnCopy);
 
             // Tlaèítko Vymazat
@@ -235,60 +235,60 @@ namespace PasswordGenerator
                 Text = "Vymazat",
                 Location = new Point(20, 380),
                 Size = new Size(450, 40),
-                Font = new Font("Arial", 11, FontStyle.Bold),
+                Font = new Font("Rubik", 11, FontStyle.Bold),
                 BackColor = Color.OrangeRed,
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand
             };
-            btnClear.Click += (sender, e) => BtnClear_Click(sender, e, txtPassword, txtCustomText);
+            btnClear.Click += (sender, e) => BtnClear_Click(sender, e, textPassword, textCustomText);
             this.Controls.Add(btnClear);
 
-            // --- Zajistíme, že po spuštìní nebude txtLength mít fokus ---
-            // Asynchronnì zrušíme ActiveControl a vymažeme výbìr v txtLength
+            // --- Zajistíme, že po spuštìní nebude textLength mít fokus ---
+            // Asynchronnì zrušíme ActiveControl a vymažeme výbìr v textLength
             this.Shown += (s, e) =>
             {
                 this.BeginInvoke(new Action(() =>
                 {
                     this.ActiveControl = null;
-                    txtLength.SelectionStart = txtLength.Text.Length;
-                    txtLength.SelectionLength = 0;
+                    textLength.SelectionStart = textLength.Text.Length;
+                    textLength.SelectionLength = 0;
                 }));
             };
         }
 
         private void BtnGenerate_Click(object sender, EventArgs e, TrackBar trackBarLength, 
-                                      CheckBox chkLowercase, CheckBox chkUppercase, 
-                                      CheckBox chkDigits, CheckBox chkSpecial, TextBox txtPassword, TextBox txtCustomText, CheckBox chkShuffleText)
+                                      CheckBox checkLowercase, CheckBox checkUppercase, 
+                                      CheckBox checkDigits, CheckBox checkSpecial, TextBox textPassword, TextBox textCustomText, CheckBox checkShuffleText)
         {
             try
             {
                 int length = trackBarLength.Value;
                 string password;
 
-                if (!string.IsNullOrEmpty(txtCustomText.Text))
+                if (!string.IsNullOrEmpty(textCustomText.Text))
                 {
                     password = _passwordGenerator.GeneratePasswordWithText(
                         length,
-                        txtCustomText.Text,
-                        chkLowercase.Checked,
-                        chkUppercase.Checked,
-                        chkDigits.Checked,
-                        chkSpecial.Checked,
-                        chkShuffleText.Checked
+                        textCustomText.Text,
+                        checkLowercase.Checked,
+                        checkUppercase.Checked,
+                        checkDigits.Checked,
+                        checkSpecial.Checked,
+                        checkShuffleText.Checked
                     );
                 }
                 else
                 {
                     password = _passwordGenerator.GeneratePassword(
                         length,
-                        chkLowercase.Checked,
-                        chkUppercase.Checked,
-                        chkDigits.Checked,
-                        chkSpecial.Checked
+                        checkLowercase.Checked,
+                        checkUppercase.Checked,
+                        checkDigits.Checked,
+                        checkSpecial.Checked
                     );
                 }
 
-                txtPassword.Text = password;
+                textPassword.Text = password;
             }
             catch (ArgumentException ex)
             {
@@ -296,11 +296,11 @@ namespace PasswordGenerator
             }
         }
 
-        private void BtnCopy_Click(object sender, EventArgs e, TextBox txtPassword)
+        private void BtnCopy_Click(object sender, EventArgs e, TextBox textPassword)
         {
-            if (!string.IsNullOrEmpty(txtPassword.Text))
+            if (!string.IsNullOrEmpty(textPassword.Text))
             {
-                Clipboard.SetText(txtPassword.Text);
+                Clipboard.SetText(textPassword.Text);
                 MessageBox.Show("Heslo bylo zkopírováno do schránky.", "Úspìch", 
                                MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -311,10 +311,10 @@ namespace PasswordGenerator
             }
         }
 
-        private void BtnClear_Click(object sender, EventArgs e, TextBox txtPassword, TextBox txtCustomText)
+        private void BtnClear_Click(object sender, EventArgs e, TextBox textPassword, TextBox textCustomText)
         {
-            txtPassword.Clear();
-            txtCustomText.Clear();
+            textPassword.Clear();
+            textCustomText.Clear();
         }
     }
 }

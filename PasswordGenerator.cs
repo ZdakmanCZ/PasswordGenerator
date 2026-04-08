@@ -12,13 +12,13 @@ namespace PasswordGenerator
         private readonly Random _random = new Random();
 
         public string GeneratePassword(int length, bool includeLowercase, bool includeUppercase, 
-                                      bool includeDigits, bool includeSpecial)
+                                      bool includeDigits, bool includeSpecialSymbols)
         {
             if (length <= 0)
                 throw new ArgumentException("Délka hesla musí být vìtší než 0.");
 
             string characterSet = BuildCharacterSet(includeLowercase, includeUppercase, 
-                                                   includeDigits, includeSpecial);
+                                                   includeDigits, includeSpecialSymbols);
 
             if (string.IsNullOrEmpty(characterSet))
                 throw new ArgumentException("Musíte vybrat alespoò jednu možnost.");
