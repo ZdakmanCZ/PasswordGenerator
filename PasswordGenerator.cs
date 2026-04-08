@@ -27,7 +27,7 @@ namespace PasswordGenerator
         }
 
         public string GeneratePasswordWithText(int length, string customText, bool includeLowercase, 
-                                              bool includeUppercase, bool includeDigits, bool includeSpecial)
+                                              bool includeUppercase, bool includeDigits, bool includeSpecial, bool shuffleText)
         {
             if (length <= 0)
                 throw new ArgumentException("Délka hesla musí být vìtší než 0.");
@@ -46,17 +46,34 @@ namespace PasswordGenerator
 
             int remainingLength = length - customText.Length;
             string randomPart = GenerateRandomPassword(characterSet, remainingLength);
-            
-            var passwordChars = (customText + randomPart).ToCharArray();
-            
-            // Zamíchání znakù
-            for (int i = passwordChars.Length - 1; i > 0; i--)
-            {
-                int randomIndex = _random.Next(i + 1);
-                (passwordChars[i], passwordChars[randomIndex]) = (passwordChars[randomIndex], passwordChars[i]);
-            }
 
-            return new string(passwordChars);
+            if (shuffleText)
+            {
+                // Vložíme vlastní text a náhodnou èást, pak zamícháme všechny znaky
+                var passwordChars = (customText + randomPart).ToCharArray();
+
+                for (int i = passwordChars.Length - 1; i > 0; i--)
+                {
+                    int randomIndex = _random.Next(i + 1);
+                    (passwordChars[i], passwordChars[randomIndex]) = (passwordChars[randomIndex], passwordChars[i]);
+                }
+
+                return new string(passwordChars);
+            }
+            else
+            {
+                // Vlastní text zùstává v pùvodním poøadí, ale vloží se na náhodnou pozici
+                int insertPosition = _random.Next(0, remainingLength + 1); // vèetnì 0 a remainingLength
+                if (insertPosition == 0)
+                    return customText + randomPart;
+                if (insertPosition == remainingLength)
+                    return randomPart + customText;
+
+                // vložení mezi znaky randomPart
+                string prefix = randomPart.Substring(0, insertPosition);
+                string suffix = randomPart.Substring(insertPosition);
+                return prefix + customText + suffix;
+            }
         }
 
         private string BuildCharacterSet(bool includeLowercase, bool includeUppercase, 
