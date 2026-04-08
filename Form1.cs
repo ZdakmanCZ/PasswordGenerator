@@ -15,7 +15,7 @@ namespace PasswordGenerator
         {
             // Nastavení vlastností formuláøe
             this.Text = "Generátor Hesel";
-            this.Size = new Size(500, 500);
+            this.Size = new Size(500, 570);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.WhiteSmoke;
 
@@ -56,12 +56,32 @@ namespace PasswordGenerator
             trackBarLength.ValueChanged += (sender, e) => lblLengthValue.Text = trackBarLength.Value.ToString();
             this.Controls.Add(trackBarLength);
 
+       
+     Label lblCustomText = new Label
+            {
+                Text = "Vlastní text (volitelnì):",
+                Location = new Point(20, 60),
+                Size = new Size(200, 25),
+                Font = new Font("Arial", 10, FontStyle.Regular)
+            };
+            this.Controls.Add(lblCustomText);
+
+            // Textbox pro zadání vlastního textu
+            TextBox txtCustomText = new TextBox
+            {
+                Name = "txtCustomText",
+                Location = new Point(20, 85),
+                Size = new Size(450, 25),
+                Font = new Font("Arial", 10)
+            };
+            this.Controls.Add(txtCustomText);
+
             // Checkbox pro malá písmena
             CheckBox chkLowercase = new CheckBox
             {
                 Name = "chkLowercase",
                 Text = "Malá písmena (a-z)",
-                Location = new Point(20, 70),
+                Location = new Point(20, 130),
                 Size = new Size(200, 25),
                 Checked = true,
                 Font = new Font("Arial", 10)
@@ -73,7 +93,7 @@ namespace PasswordGenerator
             {
                 Name = "chkUppercase",
                 Text = "Velká písmena (A-Z)",
-                Location = new Point(20, 110),
+                Location = new Point(20, 170),
                 Size = new Size(200, 25),
                 Checked = true,
                 Font = new Font("Arial", 10)
@@ -85,7 +105,7 @@ namespace PasswordGenerator
             {
                 Name = "chkDigits",
                 Text = "Èísla (0-9)",
-                Location = new Point(20, 150),
+                Location = new Point(20, 210),
                 Size = new Size(200, 25),
                 Checked = true,
                 Font = new Font("Arial", 10)
@@ -97,7 +117,7 @@ namespace PasswordGenerator
             {
                 Name = "chkSpecial",
                 Text = "Speciální znaky (!@#$...)",
-                Location = new Point(20, 190),
+                Location = new Point(20, 250),
                 Size = new Size(200, 25),
                 Checked = false,
                 Font = new Font("Arial", 10)
@@ -108,7 +128,7 @@ namespace PasswordGenerator
             TextBox txtPassword = new TextBox
             {
                 Name = "txtPassword",
-                Location = new Point(20, 250),
+                Location = new Point(20, 310),
                 Size = new Size(450, 40),
                 ReadOnly = true,
                 Font = new Font("Courier New", 12),
@@ -121,14 +141,14 @@ namespace PasswordGenerator
             {
                 Name = "btnGenerate",
                 Text = "Generovat heslo",
-                Location = new Point(20, 310),
+                Location = new Point(20, 370),
                 Size = new Size(200, 40),
                 Font = new Font("Arial", 11, FontStyle.Bold),
                 BackColor = Color.LimeGreen,
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand
             };
-            btnGenerate.Click += (sender, e) => BtnGenerate_Click(sender, e, trackBarLength, chkLowercase, chkUppercase, chkDigits, chkSpecial, txtPassword);
+            btnGenerate.Click += (sender, e) => BtnGenerate_Click(sender, e, trackBarLength, chkLowercase, chkUppercase, chkDigits, chkSpecial, txtPassword, txtCustomText);
             this.Controls.Add(btnGenerate);
 
             // Tlaèítko Kopírovat
@@ -136,7 +156,7 @@ namespace PasswordGenerator
             {
                 Name = "btnCopy",
                 Text = "Kopírovat",
-                Location = new Point(240, 310),
+                Location = new Point(240, 370),
                 Size = new Size(230, 40),
                 Font = new Font("Arial", 11, FontStyle.Bold),
                 BackColor = Color.DeepSkyBlue,
@@ -147,35 +167,51 @@ namespace PasswordGenerator
             this.Controls.Add(btnCopy);
 
             // Tlaèítko Vymazat
-            Button btnClear = new Button
+            Button btnClear = new Button    
             {
                 Name = "btnClear",
                 Text = "Vymazat",
-                Location = new Point(20, 370),
+                Location = new Point(20, 430),
                 Size = new Size(450, 40),
                 Font = new Font("Arial", 11, FontStyle.Bold),
                 BackColor = Color.OrangeRed,
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand
             };
-            btnClear.Click += (sender, e) => BtnClear_Click(sender, e, txtPassword);
+            btnClear.Click += (sender, e) => BtnClear_Click(sender, e, txtPassword, txtCustomText);
             this.Controls.Add(btnClear);
         }
 
         private void BtnGenerate_Click(object sender, EventArgs e, TrackBar trackBarLength, 
                                       CheckBox chkLowercase, CheckBox chkUppercase, 
-                                      CheckBox chkDigits, CheckBox chkSpecial, TextBox txtPassword)
+                                      CheckBox chkDigits, CheckBox chkSpecial, TextBox txtPassword, TextBox txtCustomText)
         {
             try
             {
                 int length = trackBarLength.Value;
-                string password = _passwordGenerator.GeneratePassword(
-                    length,
-                    chkLowercase.Checked,
-                    chkUppercase.Checked,
-                    chkDigits.Checked,
-                    chkSpecial.Checked
-                );
+                string password;
+
+                if (!string.IsNullOrEmpty(txtCustomText.Text))
+                {
+                    password = _passwordGenerator.GeneratePasswordWithText(
+                        length,
+                        txtCustomText.Text,
+                        chkLowercase.Checked,
+                        chkUppercase.Checked,
+                        chkDigits.Checked,
+                        chkSpecial.Checked
+                    );
+                }
+                else
+                {
+                    password = _passwordGenerator.GeneratePassword(
+                        length,
+                        chkLowercase.Checked,
+                        chkUppercase.Checked,
+                        chkDigits.Checked,
+                        chkSpecial.Checked
+                    );
+                }
 
                 txtPassword.Text = password;
             }
@@ -200,9 +236,10 @@ namespace PasswordGenerator
             }
         }
 
-        private void BtnClear_Click(object sender, EventArgs e, TextBox txtPassword)
+        private void BtnClear_Click(object sender, EventArgs e, TextBox txtPassword, TextBox txtCustomText)
         {
             txtPassword.Clear();
+            txtCustomText.Clear();
         }
     }
 }

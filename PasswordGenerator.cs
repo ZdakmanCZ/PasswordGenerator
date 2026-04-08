@@ -26,6 +26,39 @@ namespace PasswordGenerator
             return GenerateRandomPassword(characterSet, length);
         }
 
+        public string GeneratePasswordWithText(int length, string customText, bool includeLowercase, 
+                                              bool includeUppercase, bool includeDigits, bool includeSpecial)
+        {
+            if (length <= 0)
+                throw new ArgumentException("Délka hesla musí být vìtší než 0.");
+
+            if (string.IsNullOrEmpty(customText))
+                throw new ArgumentException("Vlastní text nemùže být prázdný.");
+
+            if (customText.Length >= length)
+                throw new ArgumentException("Vlastní text je pøíliš dlouhý. Musí být kratší než délka hesla.");
+
+            string characterSet = BuildCharacterSet(includeLowercase, includeUppercase, 
+                                                   includeDigits, includeSpecial);
+
+            if (string.IsNullOrEmpty(characterSet))
+                throw new ArgumentException("Musíte vybrat alespoò jednu možnost.");
+
+            int remainingLength = length - customText.Length;
+            string randomPart = GenerateRandomPassword(characterSet, remainingLength);
+            
+            var passwordChars = (customText + randomPart).ToCharArray();
+            
+            // Zamíchání znakù
+            for (int i = passwordChars.Length - 1; i > 0; i--)
+            {
+                int randomIndex = _random.Next(i + 1);
+                (passwordChars[i], passwordChars[randomIndex]) = (passwordChars[randomIndex], passwordChars[i]);
+            }
+
+            return new string(passwordChars);
+        }
+
         private string BuildCharacterSet(bool includeLowercase, bool includeUppercase, 
                                         bool includeDigits, bool includeSpecial)
         {
