@@ -29,17 +29,32 @@ namespace PasswordGenerator
             };
             this.Controls.Add(lblLength);
 
-            // NumericUpDown pro délku hesla
-            NumericUpDown nudLength = new NumericUpDown
+            // Label pro zobrazení aktuální hodnoty z TrackBar
+            Label lblLengthValue = new Label
             {
-                Name = "nudLength",
+                Name = "lblLengthValue",
+                Text = "12",
+                Location = new Point(380, 20),
+                Size = new Size(40, 25),
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleRight
+            };
+            this.Controls.Add(lblLengthValue);
+
+            // TrackBar pro délku hesla
+            TrackBar trackBarLength = new TrackBar
+            {
+                Name = "trackBarLength",
                 Location = new Point(180, 20),
-                Size = new Size(100, 25),
+                Size = new Size(190, 25),
                 Minimum = 4,
                 Maximum = 128,
-                Value = 12
+                Value = 12,
+                TickStyle = TickStyle.BottomRight,
+                TickFrequency = 10
             };
-            this.Controls.Add(nudLength);
+            trackBarLength.ValueChanged += (sender, e) => lblLengthValue.Text = trackBarLength.Value.ToString();
+            this.Controls.Add(trackBarLength);
 
             // Checkbox pro malá písmena
             CheckBox chkLowercase = new CheckBox
@@ -113,7 +128,7 @@ namespace PasswordGenerator
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand
             };
-            btnGenerate.Click += (sender, e) => BtnGenerate_Click(sender, e, nudLength, chkLowercase, chkUppercase, chkDigits, chkSpecial, txtPassword);
+            btnGenerate.Click += (sender, e) => BtnGenerate_Click(sender, e, trackBarLength, chkLowercase, chkUppercase, chkDigits, chkSpecial, txtPassword);
             this.Controls.Add(btnGenerate);
 
             // Tlaèítko Kopírovat
@@ -147,13 +162,13 @@ namespace PasswordGenerator
             this.Controls.Add(btnClear);
         }
 
-        private void BtnGenerate_Click(object sender, EventArgs e, NumericUpDown nudLength, 
+        private void BtnGenerate_Click(object sender, EventArgs e, TrackBar trackBarLength, 
                                       CheckBox chkLowercase, CheckBox chkUppercase, 
                                       CheckBox chkDigits, CheckBox chkSpecial, TextBox txtPassword)
         {
             try
             {
-                int length = (int)nudLength.Value;
+                int length = trackBarLength.Value;
                 string password = _passwordGenerator.GeneratePassword(
                     length,
                     chkLowercase.Checked,
