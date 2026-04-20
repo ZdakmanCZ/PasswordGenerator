@@ -109,8 +109,8 @@ namespace PasswordGenerator
             // Popisek pro vlastní text
             Label labelCustomText = new Label
             {
-                Text = "Vlastní text (volitelnì):",
-                Location = new Point(20, 60),
+                Text = "Vlastní text (volitelné):",
+                Location = new Point(20, 80),
                 Size = new Size(200, 25),
                 Font = new Font("Rubik", 10, FontStyle.Regular)
             };
@@ -120,7 +120,7 @@ namespace PasswordGenerator
             TextBox textCustomText = new TextBox
             {
                 Name = "textCustomText",
-                Location = new Point(20, 85),
+                Location = new Point(20, 105),
                 Size = new Size(450, 25),
                 Font = new Font("Rubik", 10)
             };
@@ -131,7 +131,7 @@ namespace PasswordGenerator
             {
                 Name = "checkBoxShuffleText",
                 Text = "Zamíchat vlastní text",
-                Location = new Point(20, 115),
+                Location = new Point(20, 135),
                 Size = new Size(200, 25),
                 Checked = true,
                 Font = new Font("Rubik", 10)
@@ -143,7 +143,7 @@ namespace PasswordGenerator
             {
                 Name = "checkBoxLowercase",
                 Text = "Malá písmena (a-z)",
-                Location = new Point(20, 160),
+                Location = new Point(20, 180),
                 Size = new Size(200, 25),
                 Checked = true,
                 Font = new Font("Rubik", 10)
@@ -155,7 +155,7 @@ namespace PasswordGenerator
             {
                 Name = "checkBoxUppercase",
                 Text = "Velká písmena (A-Z)",
-                Location = new Point(260, 160),
+                Location = new Point(260, 180),
                 Size = new Size(200, 25),
                 Checked = true,
                 Font = new Font("Rubik", 10)
@@ -167,7 +167,7 @@ namespace PasswordGenerator
             {
                 Name = "checkBoxDigits",
                 Text = "Èísla (0-9)",
-                Location = new Point(20, 200),
+                Location = new Point(20, 220),
                 Size = new Size(200, 25),
                 Checked = true,
                 Font = new Font("Rubik", 10)
@@ -179,7 +179,7 @@ namespace PasswordGenerator
             {
                 Name = "checkBoxSpecialSymbols",
                 Text = "Speciální znaky (!@#$...)",
-                Location = new Point(260, 200),
+                Location = new Point(260, 220),
                 Size = new Size(200, 25),
                 Checked = false,
                 Font = new Font("Rubik", 10)
